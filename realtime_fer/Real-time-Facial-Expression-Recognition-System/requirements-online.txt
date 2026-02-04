@@ -1,0 +1,4 @@
+# Optional online backends for the MVP demo (install only if you want API-based LLM/TTS)
+openai>=1.0.0
+azure-cognitiveservices-speech>=1.37.0
+python-dotenv>=1.0.0

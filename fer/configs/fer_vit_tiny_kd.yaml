@@ -1,0 +1,31 @@
+# Point this to your dataset root (ImageFolder layout)
+# Example:
+# dataset_root: C:/Multimodal Virtual Communication System/fer/data/rafdb
+
+dataset_root: C:/path/to/your/imagefolder_dataset
+
+batch_size: 32
+num_workers: 2
+seed: 42
+image_size: 224
+
+# timm model names
+teachers:
+  - resnet18
+  - tf_efficientnet_b3
+  - convnext_tiny
+
+student_pretrained: true
+
+train:
+  epochs: 5
+  lr: 0.0003
+  weight_decay: 0.0001
+  temperature: 4.0
+  kd_weight: 0.5
+  use_dkd: true
+  dkd_alpha: 1.0
+  dkd_beta: 6.0
+  use_arcface: false
+  arcface_s: 30.0
+  arcface_m: 0.5

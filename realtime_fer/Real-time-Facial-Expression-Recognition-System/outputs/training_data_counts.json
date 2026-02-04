@@ -1,0 +1,230 @@
+[
+  {
+    "dataset": "affectnet full balanced dataset",
+    "split": "test",
+    "total": 7175,
+    "class_counts": {
+      "anger": 1025,
+      "disgust": 1025,
+      "fear": 1025,
+      "happy": 1025,
+      "neutral": 1025,
+      "sad": 1025,
+      "surprise": 1025
+    },
+    "missing_classes": 0,
+    "max_class": "anger",
+    "max_count": 1025,
+    "min_class_nonzero": "anger",
+    "min_count_nonzero": 1025,
+    "imbalance_ratio": 1.0
+  },
+  {
+    "dataset": "affectnet full balanced dataset",
+    "split": "train",
+    "total": 28707,
+    "class_counts": {
+      "anger": 4101,
+      "disgust": 4101,
+      "fear": 4101,
+      "happy": 4101,
+      "neutral": 4101,
+      "sad": 4101,
+      "surprise": 4101
+    },
+    "missing_classes": 0,
+    "max_class": "anger",
+    "max_count": 4101,
+    "min_class_nonzero": "anger",
+    "min_count_nonzero": 4101,
+    "imbalance_ratio": 1.0
+  },
+  {
+    "dataset": "Expression in-the-Wild (ExpW) Dataset",
+    "split": "label.lst",
+    "total": 91793,
+    "class_counts": {
+      "0": 3671,
+      "1": 3995,
+      "2": 1088,
+      "3": 30537,
+      "4": 10559,
+      "5": 7060,
+      "6": 34883
+    },
+    "missing_classes": 0,
+    "max_class": "6",
+    "max_count": 34883,
+    "min_class_nonzero": "2",
+    "min_count_nonzero": 1088,
+    "imbalance_ratio": 32.06158088235294
+  },
+  {
+    "dataset": "Facial Expression Image Data AFFECTNET YOLO Format",
+    "split": "test",
+    "total": 2755,
+    "class_counts": {
+      "images": 2755,
+      "labels": 0
+    },
+    "missing_classes": 1,
+    "max_class": "images",
+    "max_count": 2755,
+    "min_class_nonzero": "images",
+    "min_count_nonzero": 2755,
+    "imbalance_ratio": 1.0
+  },
+  {
+    "dataset": "Facial Expression Image Data AFFECTNET YOLO Format",
+    "split": "train",
+    "total": 17101,
+    "class_counts": {
+      "images": 17101,
+      "labels": 0
+    },
+    "missing_classes": 1,
+    "max_class": "images",
+    "max_count": 17101,
+    "min_class_nonzero": "images",
+    "min_count_nonzero": 17101,
+    "imbalance_ratio": 1.0
+  },
+  {
+    "dataset": "Facial Expression Image Data AFFECTNET YOLO Format",
+    "split": "valid",
+    "total": 5406,
+    "class_counts": {
+      "images": 5406,
+      "labels": 0
+    },
+    "missing_classes": 1,
+    "max_class": "images",
+    "max_count": 5406,
+    "min_class_nonzero": "images",
+    "min_count_nonzero": 5406,
+    "imbalance_ratio": 1.0
+  },
+  {
+    "dataset": "FER-2013 7-emotions Uniform Dataset",
+    "split": "test",
+    "total": 7000,
+    "class_counts": {
+      "Anger": 1000,
+      "Disgust": 1000,
+      "Fear": 1000,
+      "Happiness": 1000,
+      "Neutral": 1000,
+      "Sadness": 1000,
+      "Surprise": 1000
+    },
+    "missing_classes": 0,
+    "max_class": "Anger",
+    "max_count": 1000,
+    "min_class_nonzero": "Anger",
+    "min_count_nonzero": 1000,
+    "imbalance_ratio": 1.0
+  },
+  {
+    "dataset": "FER-2013 7-emotions Uniform Dataset",
+    "split": "train",
+    "total": 56000,
+    "class_counts": {
+      "Anger": 8000,
+      "Disgust": 8000,
+      "Fear": 8000,
+      "Happiness": 8000,
+      "Neutral": 8000,
+      "Sadness": 8000,
+      "Surprise": 8000
+    },
+    "missing_classes": 0,
+    "max_class": "Anger",
+    "max_count": 8000,
+    "min_class_nonzero": "Anger",
+    "min_count_nonzero": 8000,
+    "imbalance_ratio": 1.0
+  },
+  {
+    "dataset": "FER-2013 7-emotions Uniform Dataset",
+    "split": "validation",
+    "total": 7000,
+    "class_counts": {
+      "Anger": 1000,
+      "Disgust": 1000,
+      "Fear": 1000,
+      "Happiness": 1000,
+      "Neutral": 1000,
+      "Sadness": 1000,
+      "Surprise": 1000
+    },
+    "missing_classes": 0,
+    "max_class": "Anger",
+    "max_count": 1000,
+    "min_class_nonzero": "Anger",
+    "min_count_nonzero": 1000,
+    "imbalance_ratio": 1.0
+  },
+  {
+    "dataset": "FERPlus",
+    "split": "test",
+    "total": 3573,
+    "class_counts": {
+      "angry": 322,
+      "contempt": 30,
+      "disgust": 21,
+      "fear": 98,
+      "happy": 929,
+      "neutral": 1274,
+      "sad": 449,
+      "suprise": 450
+    },
+    "missing_classes": 0,
+    "max_class": "neutral",
+    "max_count": 1274,
+    "min_class_nonzero": "disgust",
+    "min_count_nonzero": 21,
+    "imbalance_ratio": 60.666666666666664
+  },
+  {
+    "dataset": "FERPlus",
+    "split": "train",
+    "total": 66379,
+    "class_counts": {
+      "angry": 8000,
+      "contempt": 8000,
+      "disgust": 8000,
+      "fear": 8000,
+      "happy": 8000,
+      "neutral": 10379,
+      "sad": 8000,
+      "suprise": 8000
+    },
+    "missing_classes": 0,
+    "max_class": "neutral",
+    "max_count": 10379,
+    "min_class_nonzero": "angry",
+    "min_count_nonzero": 8000,
+    "imbalance_ratio": 1.297375
+  },
+  {
+    "dataset": "FERPlus",
+    "split": "validation",
+    "total": 8341,
+    "class_counts": {
+      "angry": 1000,
+      "contempt": 1000,
+      "disgust": 1000,
+      "fear": 1000,
+      "happy": 1000,
+      "neutral": 1341,
+      "sad": 1000,
+      "suprise": 1000
+    },
+    "missing_classes": 0,
+    "max_class": "neutral",
+    "max_count": 1341,
+    "min_class_nonzero": "angry",
+    "min_count_nonzero": 1000,
+    "imbalance_ratio": 1.341
+  }
+]

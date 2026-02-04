@@ -1,0 +1,10 @@
+{
+  "checkpoint": "C:\\Real-time-Facial-Expression-Recognition-System_v2_restart\\outputs\\students\\CE\\mobilenetv3_large_100_img224_seed1337_CE_20251223_225031\\best.pt",
+  "model": "mobilenetv3_large_100",
+  "image_size": 224,
+  "onnx_path": "C:\\Real-time-Facial-Expression-Recognition-System_v2_restart\\outputs\\_realtime_fer_backup_stage\\Real-time-Facial-Expression-Recognition-System_v2_restart\\models\\student_best.onnx",
+  "opset": 17,
+  "dynamic_batch": false,
+  "onnx_check_ok": true,
+  "onnx_check_error": null
+}
