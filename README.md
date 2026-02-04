@@ -109,6 +109,23 @@ For Azure OpenAI, set these in `.env`:
 
 ---
 
+## Optional: “Free” LLM replies (local OpenAI-compatible server)
+
+If you don’t want paid cloud APIs, you can run a **local** LLM server that exposes an **OpenAI-compatible** endpoint (common options: LM Studio, Ollama OpenAI server). Then run the demo with `-Llm openai`.
+
+Set environment variables (PowerShell example):
+
+```powershell
+$env:OPENAI_BASE_URL = "http://localhost:1234/v1"   # example
+$env:OPENAI_CHAT_MODEL = "your-local-model"         # server-dependent
+```
+
+Notes:
+- If your local server does not require an API key, you can leave `OPENAI_API_KEY` unset.
+- If your server requires a key/token, set `OPENAI_API_KEY` normally.
+
+---
+
 ## Demo Controls
 
 Click the OpenCV window first, then press:

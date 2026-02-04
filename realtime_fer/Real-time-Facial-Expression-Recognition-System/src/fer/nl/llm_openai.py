@@ -14,11 +14,16 @@ class OpenAIChatConfig:
 
 
 def load_openai_chat_config() -> Optional[OpenAIChatConfig]:
-    api_key = (os.getenv("OPENAI_API_KEY") or "").strip()
-    if not api_key:
-        return None
-
     base_url = (os.getenv("OPENAI_BASE_URL") or "").strip() or None
+    api_key = (os.getenv("OPENAI_API_KEY") or "").strip()
+    # Support OpenAI-compatible local servers (e.g., LM Studio / Ollama) which may not require a key.
+    # The OpenAI Python SDK still expects a non-empty api_key string.
+    if not api_key:
+        if base_url:
+            api_key = "local-no-key"
+        else:
+            return None
+
     model = (os.getenv("OPENAI_CHAT_MODEL") or "gpt-4o-mini").strip()
     try:
         timeout_s = float(os.getenv("OPENAI_TIMEOUT_S") or "20")

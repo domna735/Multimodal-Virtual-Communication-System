@@ -29,6 +29,32 @@ This log captures the work done in the first week of February 2026 for the demo-
 	- To: `realtime_fer/Real-time-Facial-Expression-Recognition-System`
 - Updated docs/process logs/checklist references to the old folder name so PowerShell commands still copy/paste correctly.
 
+### 2026-02-04 — Offline chat quality issue (repetitive replies)
+
+**Observed behavior (baseline run):**
+- When running with `-Llm offline`, typed messages with different meaning (e.g., `hi`, `how to improve happy`, `i full sad`) could produce the **same reply repeatedly** if the FER label stayed constant (e.g., `Disgust`).
+
+**Root cause:**
+- The offline reply generator relied mostly on the detected FER emotion and did not sufficiently use the **user text intent** or **self-reported emotion**.
+
+**Fix / improvement:**
+- Updated the offline dialogue logic so it uses:
+	- user intent (greeting / ask help / statement)
+	- self-reported emotion in text (e.g., “I’m sad”) when present
+	- FER emotion as a gentle tone hint (trusted only when confidence is reasonable)
+- Added lightweight variation and repetition avoidance so consecutive replies are less likely to be identical.
+
+**Additional UX tweak:**
+- Reduced “STT is disabled” spam when pressing/holding `r` by adding a small debounce/cooldown.
+
+### Optional: “free” online LLM via OpenAI-compatible local servers
+
+To enable LLM replies without paid cloud API, the MVP supports OpenAI-compatible local endpoints (e.g., LM Studio / Ollama OpenAI server):
+
+- Set `OPENAI_BASE_URL` to your local server URL.
+- `OPENAI_API_KEY` can be empty for local servers (the code uses a dummy key internally).
+- Run with `-Llm openai`.
+
 ## Key Decisions / Constraints
 - **Mic contention constraint:** continuous STT and live mic-capture prosody both use the microphone and may conflict.
 	- For “hands-free talk” demos: prefer `--prosody off` (or `--prosody wav`).

@@ -34,6 +34,10 @@ from src.fer.nl.llm_azure_openai import try_generate_reply_azure_openai  # noqa:
 from src.fer.nl.tts_azure import speak_azure  # noqa: E402
 from src.fer.nl.stt_azure import AzureContinuousSTT, listen_once_azure  # noqa: E402
 from src.fer.nl.prosody import ProsodyResult, analyze_wav, record_mic_to_wav  # noqa: E402
+from src.fer.nl.offline_dialogue import (  # noqa: E402
+    OfflinePersona,
+    generate_offline_reply,
+)
 
 
 @dataclass(frozen=True)
@@ -69,49 +73,15 @@ def _pick_persona(key: str) -> Persona:
     return PERSONAS[0]
 
 
-def generate_reply(*, user_text: str, emotion: str, persona: Persona) -> str:
-    t = user_text.strip()
-    e = (emotion or "neutral").strip().lower()
-
-    # A lightweight, offline baseline (no LLM) to make the MVP demonstrable.
-    # You can later swap this for an API call by keeping the same function signature.
-    if persona.key == "technical_advisor":
-        if e in {"sad", "fear", "anger", "disgust"}:
-            return (
-                f"Noted ({e}). Let's reduce uncertainty. "
-                "Tell me your goal in one sentence, and what you tried so far."
-            )
-        return "Got it. What is your exact goal and constraints?"
-
-    if persona.key == "supportive_mentor":
-        if e == "happy":
-            return "Nice—keep that momentum. What’s the next small step you want to take?"
-        if e == "sad":
-            return "I’m here with you. Want to tell me what happened, and what support you need?"
-        if e == "anger":
-            return "That sounds frustrating. Let’s slow down—what’s the main problem causing this?"
-        if e == "fear":
-            return "It’s okay to feel nervous. What part feels most risky right now?"
-        if e == "disgust":
-            return "Understood. What specifically feels unacceptable, and what outcome do you want instead?"
-        if e == "surprise":
-            return "That’s unexpected. What changed, and what do you think it means?"
-        return "Okay. What’s your situation, and what outcome do you want?"
-
-    # calm_companion
-    if e == "happy":
-        return "You look happy. Want to share what’s going well?"
-    if e == "sad":
-        return "You seem a bit down. I’m listening—what’s on your mind?"
-    if e == "anger":
-        return "You look tense. Let’s take one breath. What’s bothering you most?"
-    if e == "fear":
-        return "You seem worried. Do you want to talk about what you’re afraid might happen?"
-    if e == "disgust":
-        return "I can see discomfort. What’s feeling unpleasant right now?"
-    if e == "surprise":
-        return "You look surprised. What just happened?"
-    return "I’m here. What would you like to talk about?"
+def generate_reply(*, user_text: str, emotion: str, confidence: float, persona: Persona, previous_reply: str = "") -> str:
+    # Offline baseline: use the user text (intent + self-report) and only use FER emotion as a gentle hint.
+    return generate_offline_reply(
+        user_text=user_text,
+        detected_emotion=emotion,
+        confidence=float(confidence),
+        persona=OfflinePersona(key=persona.key, display=persona.display),
+        previous_reply=previous_reply or None,
+    )
 
 
 def speak_windows(text: str, *, rate: int = 0, volume: int = 100) -> None:
@@ -409,6 +379,10 @@ def main() -> int:
             # Both continuous STT and sounddevice mic-capture can contend for the mic.
             print("[stt] note: --stt-mode continuous may conflict with --prosody mic (both use microphone).")
 
+    # Key debounce / cooldown state.
+    last_r_ts: float = 0.0
+    last_stt_disabled_ts: float = 0.0
+
     def _handle_user_message(
         user_text: str,
         *,
@@ -455,7 +429,13 @@ def main() -> int:
             llm_ms = (time.perf_counter() - t0) * 1000.0
             if not last_bot:
                 used_llm_fallback = True
-                last_bot = generate_reply(user_text=last_user, emotion=fused_emotion, persona=persona)
+                last_bot = generate_reply(
+                    user_text=last_user,
+                    emotion=fused_emotion,
+                    confidence=float(last_conf),
+                    persona=persona,
+                    previous_reply=last_bot,
+                )
         elif str(args.llm) == "azure-openai":
             t0 = time.perf_counter()
             last_bot = (
@@ -470,9 +450,21 @@ def main() -> int:
             llm_ms = (time.perf_counter() - t0) * 1000.0
             if not last_bot:
                 used_llm_fallback = True
-                last_bot = generate_reply(user_text=last_user, emotion=fused_emotion, persona=persona)
+                last_bot = generate_reply(
+                    user_text=last_user,
+                    emotion=fused_emotion,
+                    confidence=float(last_conf),
+                    persona=persona,
+                    previous_reply=last_bot,
+                )
         else:
-            last_bot = generate_reply(user_text=last_user, emotion=fused_emotion, persona=persona)
+            last_bot = generate_reply(
+                user_text=last_user,
+                emotion=fused_emotion,
+                confidence=float(last_conf),
+                persona=persona,
+                previous_reply=last_bot,
+            )
 
         print(f"Bot: {last_bot}\n")
         if logger is not None:
@@ -702,6 +694,12 @@ def main() -> int:
                 _handle_user_message(typed, input_mode="typed", tsec_now=float(tsec))
 
         if key == ord("r"):
+            # Debounce: if the key repeats very quickly, ignore.
+            now = time.perf_counter()
+            if (now - last_r_ts) < 0.75:
+                continue
+            last_r_ts = now
+
             print(f"\n[emotion={last_emotion}] [persona={persona.display}]")
 
             # If prosody is enabled with live mic capture, record once to a temp wav.
@@ -730,7 +728,11 @@ def main() -> int:
                         print(f"[prosody] voice_mood={prosody.voice_mood} pitch_hz={phz}")
 
             if str(args.stt) != "azure":
-                print("STT is disabled. Re-run with: --stt azure\n")
+                # Avoid spamming if the user presses/holds 'r'.
+                now2 = time.perf_counter()
+                if (now2 - last_stt_disabled_ts) >= 2.0:
+                    print("STT is disabled. Re-run with: --stt azure\n")
+                    last_stt_disabled_ts = now2
                 continue
 
             print("Listening... (STT)")
